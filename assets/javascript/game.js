@@ -3,6 +3,7 @@ var defender = false;
 var attacker = "";
 var characters = [];
 var chosenDefender;
+var chosenCharacter;
 window.onload = function() {
 
   //  Click events are done for us:
@@ -37,6 +38,7 @@ function Slime(nameInput, healthInput, attackInput, counterAttackInput, imageInp
 			gameStarted = true;
 			console.log(characters.indexOf(self));
 			characters.splice(characters.indexOf(self), 1);
+			chosenCharacter = self;
 			for(var i = 0; i < characters.length; i++){
 				console.log("enemy" + characters[i].name);
 				characters[i].makeEnemy();
@@ -55,9 +57,20 @@ function Slime(nameInput, healthInput, attackInput, counterAttackInput, imageInp
 		$("#enemyCharacters").append($("#" + self.name));
 	};
 
-	this.attackEnemy(enemySlime){
-		
-	}
+	this.attackEnemy = function(enemySlime){
+		self.totalAttack += self.attack;
+		enemySlime.health -= self.totalAttack;
+		self.health -= enemySlime.counterAttack;
+		console.log("health: " + self.health + "   attack: " + self.totalAttack);
+		console.log("enemy health: "  + enemySlime.health);
+		if(enemySlime.health <= 0){
+			defender = false;
+			$("#"+enemySlime.name).remove();
+		}
+		if(self.health <= 0){
+			console.log("you lost");
+		}
+	};
 }
 
 // var pinkSlime = {
@@ -143,7 +156,7 @@ $("#attackButton").on("click", function(){
 	console.log("attack button pressed");
 	if(gameStarted && defender){
 		console.log("fight is on");
-
+		chosenCharacter.attackEnemy(chosenDefender);
 
 		// console.log($("#yourCharacter:nth-child(2)"))
 		// if($("#yourCharacter:nth-child(2)").attr("id") === "pink"){
@@ -153,17 +166,15 @@ $("#attackButton").on("click", function(){
 		// 		pinkSlime.attackEnemy(puddleSlime);
 		// 	}
 		// }
-
-
 	}
 });
 
 console.log("pre initialize");
-var pinkSlime = new Slime("pink", 200, 5, 10, "assets/images/pinkSlime.jpg");
+var pinkSlime = new Slime("pink", 200, 5, 8, "assets/images/pinkSlime.jpg");
 pinkSlime.initializeSlime();
 characters.push(pinkSlime);
 
-var puddleSlime = new Slime("puddle", 180, 7, 15, "assets/images/puddleSlime.jpg");
+var puddleSlime = new Slime("puddle", 180, 7, 10, "assets/images/puddleSlime.jpg");
 puddleSlime.initializeSlime();
 characters.push(puddleSlime);
 
@@ -171,7 +182,7 @@ var radSlime = new Slime("rad", 150, 10, 20, "assets/images/radSlime.jpg");
 radSlime.initializeSlime();
 characters.push(radSlime);
 
-var boomSlime = new Slime("boom", 120, 20, 25, "assets/images/boomSlime.jpg");
+var boomSlime = new Slime("boom", 120, 16, 25, "assets/images/boomSlime.jpg");
 boomSlime.initializeSlime();
 characters.push(boomSlime);
 
